@@ -1,0 +1,90 @@
+Q1
+//configure the cloud1 (for Se4)
+Router1(config)#int s1/0
+Router1(config-if)#no shut
+Router1(config-if)#encapsulation frame-relay
+Router1(config-if)#exit
+Router1(config)#int s1/0 point-to-point
+Router1(config-if)#ip addr 10.1.1.1 255.255.255.0
+Router1(config-if)#frame-relay interface-dlci 201
+Router1(config-if)#exit
+
+//configure the cloud1 (for Se3)
+Router0(config)#int s1/0
+Router0(config-if)#no shut
+Router0(config-if)#encapsulation frame-relay
+Router0(config-if)#exit
+Router0(config)#int s1/0 point-to-point
+Router0(config-if)#ip addr 10.1.1.2 255.255.255.0
+Router0(config-if)#frame-relay interface-dlci 102
+Router0(config-if)#exit
+
+//configure the cloud2 (for Se4)
+Router0(config)#int s1/1
+Router0(config-if)#no shut
+Router0(config-if)#encapsulation frame-relay
+Router0(config-if)#exit
+Router0(config)#int s1/1 point-to-point
+Router0(config-if)#ip addr 10.1.2.1 255.255.255.0
+Router0(config-if)#frame-relay interface-dlci 201
+Router0(config-if)#exit
+
+//configure the cloud2 (for Se3)
+Router2(config)#int s1/1
+Router2(config-if)#no shut
+Router2(config-if)#encapsulation frame-relay
+Router2(config-if)#exit
+Router2(config)#int s1/1 point-to-point
+Router2(config-if)#ip addr 10.1.2.2 255.255.255.0
+Router2(config-if)#frame-relay interface-dlci 102
+Router2(config-if)#exit
+
+**************************************************************
+
+Q1.1
+//network A to unifi network, but not proxy network
+Router0(config)#access-list 100 permit icmp 192.168.1.0 0.0.0.255 192.168.3.0 0.0.0.255
+Router0(config)#int fa0/0.1
+Router0(config)#ip access-group 100 in
+
+//network B to proxy netowork, but not unifi network
+Router0(config)#access-list 101 permit icmp 192.168.2.0 0.0.0.255 192.168.4.0 0.0.0.255
+Router0(config)#int fa0/0.2
+Router0(config)#ip access-group 101 in
+
+*********************************************************
+
+Q1.2
+//network A to proxy network, but not unifi network
+Router0(config)#access-list 102 permit icmp 192.168.1.0 0.0.0.255 192.168.4.0 0.0.0.255
+Router0(config)#int fa0/0.1
+Router0(config)#ip access-group 102 in
+
+//network B to unifi netowork, but not proxy network
+Router0(config)#access-list 103 permit icmp 192.168.2.0 0.0.0.255 192.168.3.0 0.0.0.255
+Router0(config)#int fa0/0.2
+Router0(config)#ip access-group 103 in
+
+***********************************************************
+
+Q1.3
+//both network A and B to unifi network, not proxy network
+Router0(config)#access-list 104 permit icmp 192.168.1.0 0.0.0.255 192.168.3.0 0.0.0.255
+Router0(config)#int fa0/0.1
+Router0(config)#ip access-group 104 in
+
+Router0(config)#access-list 105 permit icmp 192.168.2.0 0.0.0.255 192.168.3.0 0.0.0.255
+Router0(config)#int fa0/0.2
+Router0(config)#ip access-group 105 in
+
+**************************************************************
+
+Q1.4
+//both network A and B to unifi network, not proxy network
+Router0(config)#access-list 106 permit icmp 192.168.1.0 0.0.0.255 192.168.4.0 0.0.0.255
+Router0(config)#int fa0/0.1
+Router0(config)#ip access-group 104 in
+
+Router0(config)#access-list 107 permit icmp 192.168.2.0 0.0.0.255 192.168.4.0 0.0.0.255
+Router0(config)#int fa0/0.2
+Router0(config)#ip access-group 107 in
